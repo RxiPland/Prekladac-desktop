@@ -5,7 +5,8 @@ from PyQt5.QtWidgets import QMessageBox, QMainWindow, QApplication, QFileDialog,
 from hlavni_menu import Ui_MainWindow_hlavni_menu
 from os.path import exists
 import os
-import requests 
+import requests
+import googletrans
 
 
 class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
@@ -157,7 +158,6 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
                     response = requests.get(url_prekladace)
 
-                    print(response.text)
 
                 except:
 
