@@ -2,6 +2,7 @@
 
 - Umožňuje překládat věty bez zapnutí prohlížeče
 - Pro prevenci před zablokováním ip adresy, je nastavena prodleva mezi překlady
+- Pro překlad je využíván https://translate.google.com/
 
 # Náhled
 
