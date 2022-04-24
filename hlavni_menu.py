@@ -147,7 +147,7 @@ class Ui_MainWindow_hlavni_menu(object):
         self.pushButton_2.setText(_translate("MainWindow", "Poslechnout"))
         self.pushButton_3.setText(_translate("MainWindow", "Poslechnout"))
         self.pushButton_4.setText(_translate("MainWindow", "Reset"))
-        self.pushButton_5.setText(_translate("MainWindow", "Uložit aktuální\nrozložení jazyků"))
+        self.pushButton_5.setText(_translate("MainWindow", "Uložit aktuální\nvýběr jazyků"))
         self.checkBox.setText(_translate("MainWindow", " Automaticky přehrát\n zvuk překladu"))
         self.pushButton_6.setText(_translate("MainWindow", "Kopírovat překlad"))
         self.pushButton_7.setText(_translate("MainWindow", "Vložit ze schránky"))

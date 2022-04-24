@@ -1,8 +1,6 @@
 # Vytvořil RxiPland
 # 2022
 
-# python 3.9.9
-
 from time import sleep
 from PyQt5.QtWidgets import QMessageBox, QMainWindow, QApplication, QFileDialog, QDialog
 from hlavni_menu import Ui_MainWindow_hlavni_menu
@@ -12,6 +10,7 @@ from googletrans import Translator
 import threading
 from hashlib import md5
 import pyperclip
+from playsound import playsound
 
 
 class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
@@ -76,6 +75,8 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
     def reset_tlacitko(self):
 
+        # tlačítko reset - vymaže textové buňky a vrátí výběr jazyků do původního stavu
+
         self.plainTextEdit.clear()
         self.plainTextEdit_2.clear()
 
@@ -114,7 +115,7 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
             msgBox = QMessageBox()
             msgBox.setIcon(QMessageBox.Question)
             msgBox.setWindowTitle("Oznámení")
-            msgBox.setText("Rozložení jazyků bylo úspěšně uloženo")
+            msgBox.setText("Výběr jazyků byl úspěšně uložen")
             msgBox.setStandardButtons(QMessageBox.Ok)
             msgBox.exec()
 
@@ -257,6 +258,57 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
             msgBox.setStandardButtons(QMessageBox.Ok)
             msgBox.exec()
 
+    def pustit_zvuk(self, cesta: str):
+
+        global prave_se_prehrava
+
+        prave_se_prehrava = True
+
+        playsound(cesta)
+
+        prave_se_prehrava = False
+        
+
+    def poslechnout_neprelozeny(self):
+
+        global prave_se_prehrava
+
+        cesta_program = os.getcwd()
+        cesta_temp_slozka = cesta_program + "\\temp"
+
+        ulozene_jazyky_dict = self.ulozene_jazyky()
+
+        neprelozeny_text = str(self.plainTextEdit.toPlainText())
+        jazyk_1 = str(self.comboBox.currentText())
+
+        if neprelozeny_text.strip() != "":
+
+            md5hash_neprelozeny = str(md5((neprelozeny_text).encode()).hexdigest())
+
+            cesta = str(cesta_temp_slozka + "\\" + ulozene_jazyky_dict[jazyk_1] + "_" + md5hash_neprelozeny + ".mp3")
+
+            try:
+
+                if prave_se_prehrava == False:
+
+                    thread = threading.Thread(target=self.pustit_zvuk, args=(cesta,))
+                    thread.start()
+
+                else:
+
+                    pass
+
+            except:
+
+                # stáhnout
+
+                pass
+
+        else:
+
+            return
+
+
 
 
 if __name__ == "__main__":
@@ -267,6 +319,7 @@ if __name__ == "__main__":
 
     odpocitavani_casu = 0
     POCET_SEKUND = 5
+    prave_se_prehrava = False
     md5_hash_prekladu = ""
 
     hlavni_menu1 = hlavni_menu0()
@@ -275,6 +328,7 @@ if __name__ == "__main__":
     hlavni_menu1.show()
 
     hlavni_menu1.pushButton.clicked.connect(hlavni_menu1.prelozit)
+    hlavni_menu1.pushButton_2.clicked.connect(hlavni_menu1.poslechnout_neprelozeny)
     hlavni_menu1.pushButton_4.clicked.connect(hlavni_menu1.reset_tlacitko)
     hlavni_menu1.pushButton_5.clicked.connect(hlavni_menu1.ulozit_nastaveni)
     hlavni_menu1.pushButton_6.clicked.connect(hlavni_menu1.kopirovat_do_schranky)
