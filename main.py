@@ -203,13 +203,13 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
                 try:
 
-                    if odpocitavani_casu == 0 and md5_hash_prekladu != md5_hash_predchoziho_prekladu:
+                    if (odpocitavani_casu == 0 and md5_hash_prekladu != md5_hash_predchoziho_prekladu) or self.plainTextEdit_2.toPlainText() == "":
 
                         prelozeny_text = str(translator.translate(text_k_prelozeni, dest=jazyk_2, src=jazyk_1).text)
 
                         md5_hash_prekladu = str(md5((text_k_prelozeni + jazyk_1 + jazyk_2).encode()).hexdigest())
 
-                        self.plainTextEdit_2.setPlainText(prelozeny_text)
+                        self.plainTextEdit_2.setPlainText(prelozeny_text.replace(".", ". "))
 
                         thread.start()
 
@@ -348,6 +348,9 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
                     msgBox.setStandardButtons(QMessageBox.Ok)
                     msgBox.exec()
 
+                    self.pushButton_2.setChecked(False)
+                    self.pushButton_3.setChecked(False)
+
                     return
 
             else:
@@ -389,6 +392,9 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
                             msgBox.setStandardButtons(QMessageBox.Ok)
                             msgBox.exec()
 
+                            self.pushButton_2.setChecked(False)
+                            self.pushButton_3.setChecked(False)
+
                             return
 
                     except:
@@ -402,7 +408,21 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
                         return
 
-                except:
+                except urllib.error.HTTPError:
+
+                    msgBox = QMessageBox()
+                    msgBox.setIcon(QMessageBox.Warning)
+                    msgBox.setWindowTitle("Problém")
+                    msgBox.setText("Text je moc dlouhý, aby se mohl zvukově přehrát!")
+                    msgBox.setStandardButtons(QMessageBox.Ok)
+                    msgBox.exec()
+
+                    self.pushButton_2.setChecked(False)
+                    self.pushButton_3.setChecked(False)
+
+                    return
+
+                except urllib.error.URLError:
 
                     msgBox = QMessageBox()
                     msgBox.setIcon(QMessageBox.Warning)
@@ -410,6 +430,9 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
                     msgBox.setText("Nefunguje připojení k internetu!")
                     msgBox.setStandardButtons(QMessageBox.Ok)
                     msgBox.exec()
+
+                    self.pushButton_2.setChecked(False)
+                    self.pushButton_3.setChecked(False)
 
                     return
 
@@ -471,6 +494,9 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
                     msgBox.setStandardButtons(QMessageBox.Ok)
                     msgBox.exec()
 
+                    self.pushButton_2.setChecked(False)
+                    self.pushButton_3.setChecked(False)
+
                     return
 
             else:
@@ -525,7 +551,21 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
                         return
 
-                except:
+                except urllib.error.HTTPError:
+
+                    msgBox = QMessageBox()
+                    msgBox.setIcon(QMessageBox.Warning)
+                    msgBox.setWindowTitle("Problém")
+                    msgBox.setText("Text je moc dlouhý, aby se mohl zvukově přehrát!")
+                    msgBox.setStandardButtons(QMessageBox.Ok)
+                    msgBox.exec()
+
+                    self.pushButton_2.setChecked(False)
+                    self.pushButton_3.setChecked(False)
+
+                    return
+
+                except urllib.error.URLError:
 
                     msgBox = QMessageBox()
                     msgBox.setIcon(QMessageBox.Warning)
@@ -533,6 +573,9 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
                     msgBox.setText("Nefunguje připojení k internetu!")
                     msgBox.setStandardButtons(QMessageBox.Ok)
                     msgBox.exec()
+
+                    self.pushButton_2.setChecked(False)
+                    self.pushButton_3.setChecked(False)
 
                     return
 
