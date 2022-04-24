@@ -28,20 +28,11 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
     def ulozene_jazyky(self):
 
-        # tato funkce uchovává všechny dostupné jazyky pro tento program
+        # tato funkce uchovává zkratky jazyků pro tento program
 
         ulozene_jazyky = {"Čeština": "cs", "Angličtina": "en", "Němčina": "de", "Slovenština": "sk", "Ukrajinština": "uk", "Španělština": "es", "Francouzština": "fr", "Italština": "it", "Ruština": "ru",  "Polština": "pl"}
 
-        #Čeština
-        #Angličtina
-        #Němčina
-        #Slovenština
-        #Ukrajinština
-        #Španělština
-        #Francouzština
-        #Italština
-        #Ruština
-        #Polština
+        # https://cloud.google.com/translate/docs/languages
 
         return ulozene_jazyky
 
@@ -249,6 +240,8 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
     def kopirovat_do_schranky(self):
 
+        # tato funkce zkopíruje obsah pole do schránky uživatele
+
         try:
 
             prelozeny_text = str(self.plainTextEdit_2.toPlainText())
@@ -273,6 +266,8 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
     def vlozit_ze_schranky(self):
 
+        # tato funkce vloží aktuální obsah schránky do textového pole
+
         try:
 
             text_ze_schranky = str(pyperclip.paste())
@@ -290,7 +285,7 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
     def pustit_zvuk(self, cesta: str):
 
-        # pustí zvuk
+        # spustí zvuk
         # tato funkce se spouští v threadu
 
         mixer.init()
@@ -307,6 +302,8 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
         self.pushButton_3.setChecked(False)
 
     def poslechnout_neprelozeny(self):
+
+        # poslechne nepřeložený text
 
         neprelozeny_text = str(self.plainTextEdit.toPlainText())
 
@@ -419,7 +416,6 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
             try:
 
                 mixer.music.stop()
-                mixer.music.unload()
 
             except:
 
@@ -428,17 +424,21 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
     def poslechnout_prelozeny(self):
 
+        # poslechne přeložený text
+
         prelozeny_text = str(self.plainTextEdit_2.toPlainText())
 
         if prelozeny_text.strip() == "":
 
-            # zkontroluje zda je textové pole prázdné
+            # zkontroluje zda je textové pole prázdné, pokud ano, nebude se pokračovat dál
 
             self.pushButton_3.setChecked(False)
 
             return
 
         elif self.pushButton_3.isChecked() or self.checkBox.isChecked():
+
+            # pokud bude tlačítko poslechnout u přeloženého textu, nebo zaškrtávácí políčko zmáčknuto, spustí se zvuk
 
             cesta_program = os.getcwd()
             cesta_temp_slozka = cesta_program + "\\temp"
@@ -465,7 +465,7 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
                     msgBox = QMessageBox()
                     msgBox.setIcon(QMessageBox.Warning)
                     msgBox.setWindowTitle("Problém")
-                    msgBox.setText("MP3 soubor nelze přehrát!")
+                    msgBox.setText("MP3 soubor nelze přehrát!\n\nZkuste zavřít a znovu otevřít program.")
                     msgBox.setStandardButtons(QMessageBox.Ok)
                     msgBox.exec()
 
@@ -539,7 +539,6 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
             try:
 
                 mixer.music.stop()
-                mixer.music.unload()
 
             except:
 
