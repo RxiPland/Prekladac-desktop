@@ -599,7 +599,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     odpocitavani_casu = 0
-    POCET_SEKUND = 5
+    POCET_SEKUND = 5            # defaultní hodnota prodlev mezi překlady (změna na vlastní zodpovědnost)
     md5_hash_prekladu = ""
 
     hlavni_menu1 = hlavni_menu0()
