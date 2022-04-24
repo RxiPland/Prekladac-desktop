@@ -9,4 +9,5 @@ pip install PyQt5
 pip install Pyperclip
 pip install googletrans==4.0.0rc1
 pip install pygame
+
 ```
