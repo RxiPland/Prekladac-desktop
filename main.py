@@ -91,7 +91,7 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
     def reset_tlacitko(self):
 
-        # tlačítko reset - vymaže textové buňky a vrátí výběr jazyků do původního stavu
+        # reset - vymaže textové buňky a vrátí výběr jazyků do původního stavu
 
         self.plainTextEdit.clear()
         self.plainTextEdit_2.clear()
@@ -110,7 +110,14 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
         else:
 
             self.comboBox.setCurrentIndex(0)
-            self.comboBox_2.setCurrentIndex(0)
+            self.comboBox_2.setCurrentIndex(1)
+
+    def vymazat_bunky(self):
+
+        # vyčistí buňky
+
+        self.plainTextEdit.clear()
+        self.plainTextEdit_2.clear()
 
     def ulozit_nastaveni(self):
 
@@ -603,7 +610,7 @@ if __name__ == "__main__":
     hlavni_menu1.pushButton.clicked.connect(hlavni_menu1.prelozit)
     hlavni_menu1.pushButton_2.clicked.connect(hlavni_menu1.poslechnout_neprelozeny)
     hlavni_menu1.pushButton_3.clicked.connect(hlavni_menu1.poslechnout_prelozeny)
-    hlavni_menu1.pushButton_4.clicked.connect(hlavni_menu1.reset_tlacitko)
+    hlavni_menu1.pushButton_4.clicked.connect(hlavni_menu1.vymazat_bunky)
     hlavni_menu1.pushButton_5.clicked.connect(hlavni_menu1.ulozit_nastaveni)
     hlavni_menu1.pushButton_6.clicked.connect(hlavni_menu1.kopirovat_do_schranky)
     hlavni_menu1.pushButton_7.clicked.connect(hlavni_menu1.vlozit_ze_schranky)
