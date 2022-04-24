@@ -217,10 +217,6 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
                             self.poslechnout_prelozeny()
 
-                    else:
-
-                        self.poslechnout_prelozeny()
-
 
                 except:
 
