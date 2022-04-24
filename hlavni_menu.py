@@ -46,9 +46,12 @@ class Ui_MainWindow_hlavni_menu(object):
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setGeometry(QtCore.QRect(180, 22, 101, 31))
         self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_2.setCheckable(True)
+
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_3.setGeometry(QtCore.QRect(180, 252, 101, 31))
         self.pushButton_3.setObjectName("pushButton_3")
+        self.pushButton_3.setCheckable(True)
 
 
         self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
@@ -146,7 +149,7 @@ class Ui_MainWindow_hlavni_menu(object):
         self.comboBox_2.setItemText(9, _translate("MainWindow", "Polština"))
         self.pushButton_2.setText(_translate("MainWindow", "Poslechnout"))
         self.pushButton_3.setText(_translate("MainWindow", "Poslechnout"))
-        self.pushButton_4.setText(_translate("MainWindow", "Reset"))
+        self.pushButton_4.setText(_translate("MainWindow", "Vymazat"))
         self.pushButton_5.setText(_translate("MainWindow", "Uložit aktuální\nvýběr jazyků"))
         self.checkBox.setText(_translate("MainWindow", " Automaticky přehrát\n zvuk překladu"))
         self.pushButton_6.setText(_translate("MainWindow", "Kopírovat překlad"))

@@ -10,7 +10,11 @@ from googletrans import Translator
 import threading
 from hashlib import md5
 import pyperclip
-from playsound import playsound
+from urllib.parse import quote
+import urllib.request
+from shutil import move, rmtree
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+from pygame import mixer
 
 
 class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
@@ -69,9 +73,28 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
     def ukoncit(self):
 
-        # dodělat smazání dočasné složky se zvuky
+        # ukončí přehrávání zvuku a smaže temp složku
 
-        pass
+        try:
+        
+            mixer.music.stop()
+            mixer.music.unload()
+
+        except:
+
+            pass
+
+        cesta_program = os.getcwd()
+        cesta_temp_slozka = cesta_program + "\\temp"
+
+        try:
+
+            rmtree(cesta_temp_slozka)
+
+        except:
+
+            pass
+
 
     def reset_tlacitko(self):
 
@@ -134,6 +157,8 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
         global odpocitavani_casu, POCET_SEKUND
 
+        self.pushButton.setEnabled(False)
+
 
         for i in reversed(range(0, POCET_SEKUND)):
 
@@ -144,6 +169,7 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
             self.pushButton.setText(f"Dostupné za {str(odpocitavani_casu)}s")
 
         self.pushButton.setText("Přeložit")
+        self.pushButton.setEnabled(True)
 
     def prelozit(self):
 
@@ -194,9 +220,13 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
                         thread.start()
 
+                        if self.checkBox.isChecked():
+
+                            self.poslechnout_prelozeny()
+
                     else:
 
-                        pass
+                        self.poslechnout_prelozeny()
 
 
                 except:
@@ -260,56 +290,260 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
     def pustit_zvuk(self, cesta: str):
 
-        global prave_se_prehrava
+        # pustí zvuk
+        # tato funkce se spouští v threadu
 
-        prave_se_prehrava = True
+        mixer.init()
 
-        playsound(cesta)
+        mixer.music.load(cesta)
+        mixer.music.play(loops=0)
 
-        prave_se_prehrava = False
+        while mixer.music.get_busy():
+
+            pass
         
+        mixer.music.unload()
+        self.pushButton_2.setChecked(False)
+        self.pushButton_3.setChecked(False)
 
     def poslechnout_neprelozeny(self):
 
-        global prave_se_prehrava
-
-        cesta_program = os.getcwd()
-        cesta_temp_slozka = cesta_program + "\\temp"
-
-        ulozene_jazyky_dict = self.ulozene_jazyky()
-
         neprelozeny_text = str(self.plainTextEdit.toPlainText())
-        jazyk_1 = str(self.comboBox.currentText())
 
-        if neprelozeny_text.strip() != "":
+        if neprelozeny_text.strip() == "":
 
-            md5hash_neprelozeny = str(md5((neprelozeny_text).encode()).hexdigest())
+            # zkontroluje zda je textové pole prázdné
 
-            cesta = str(cesta_temp_slozka + "\\" + ulozene_jazyky_dict[jazyk_1] + "_" + md5hash_neprelozeny + ".mp3")
-
-            try:
-
-                if prave_se_prehrava == False:
-
-                    thread = threading.Thread(target=self.pustit_zvuk, args=(cesta,))
-                    thread.start()
-
-                else:
-
-                    pass
-
-            except:
-
-                # stáhnout
-
-                pass
-
-        else:
+            self.pushButton_2.setChecked(False)
 
             return
 
+        elif self.pushButton_2.isChecked():
+
+            cesta_program = os.getcwd()
+            cesta_temp_slozka = cesta_program + "\\temp"
+
+            ulozene_jazyky_dict = self.ulozene_jazyky()
+
+            jazyk_1 = str(self.comboBox.currentText())
+
+            md5hash_neprelozeny = str(md5((neprelozeny_text).encode()).hexdigest())
+
+            cesta_mp3_temp = str(cesta_temp_slozka + "\\" + ulozene_jazyky_dict[jazyk_1] + "_" + md5hash_neprelozeny + ".mp3")
+
+            if exists(cesta_mp3_temp):
+
+                # pokud již mp3 soubor existuje
+
+                try:
+
+                    thread = threading.Thread(target=self.pustit_zvuk, args=(cesta_mp3_temp,))
+                    thread.start()
+
+                except:
+
+                    msgBox = QMessageBox()
+                    msgBox.setIcon(QMessageBox.Warning)
+                    msgBox.setWindowTitle("Problém")
+                    msgBox.setText("MP3 soubor nelze přehrát!")
+                    msgBox.setStandardButtons(QMessageBox.Ok)
+                    msgBox.exec()
+
+                    return
+
+            else:
+
+                # stáhnout
+
+                if not exists(cesta_temp_slozka):
+
+                    os.mkdir(cesta_temp_slozka)
+
+                zvuk_ke_stazeni_url = quote(neprelozeny_text, safe='/:?&')
+
+                url_zvuku = "https://translate.google.com/translate_tts?ie=UTF-8&tl=" + ulozene_jazyky_dict[jazyk_1] + "&client=tw-ob&q=" + zvuk_ke_stazeni_url
+
+                try:
+
+                    response = urllib.request.urlretrieve(url_zvuku)
+
+                    cesta_mp3 = str(response[0])
+                    cesta_mp3 = cesta_mp3.replace("//", "/")
+
+                    try:
+
+                        if not exists(cesta_mp3_temp):
+
+                            move(cesta_mp3, cesta_mp3_temp)
+
+                        try:
+
+                            thread = threading.Thread(target=self.pustit_zvuk, args=(cesta_mp3_temp,))
+                            thread.start()
+
+                        except:
+
+                            msgBox = QMessageBox()
+                            msgBox.setIcon(QMessageBox.Warning)
+                            msgBox.setWindowTitle("Problém")
+                            msgBox.setText("Nelze spustit mp3 soubor!")
+                            msgBox.setStandardButtons(QMessageBox.Ok)
+                            msgBox.exec()
+
+                            return
+
+                    except:
+
+                        msgBox = QMessageBox()
+                        msgBox.setIcon(QMessageBox.Warning)
+                        msgBox.setWindowTitle("Problém")
+                        msgBox.setText("Nastala chyba při přesouvání mp3 souboru do temp složky!")
+                        msgBox.setStandardButtons(QMessageBox.Ok)
+                        msgBox.exec()
+
+                        return
+
+                except:
+
+                    msgBox = QMessageBox()
+                    msgBox.setIcon(QMessageBox.Warning)
+                    msgBox.setWindowTitle("Problém")
+                    msgBox.setText("Nefunguje připojení k internetu!")
+                    msgBox.setStandardButtons(QMessageBox.Ok)
+                    msgBox.exec()
+
+                    return
+
+        else:
+
+            try:
+
+                mixer.music.stop()
+                mixer.music.unload()
+
+            except:
+
+                return
 
 
+    def poslechnout_prelozeny(self):
+
+        prelozeny_text = str(self.plainTextEdit_2.toPlainText())
+
+        if prelozeny_text.strip() == "":
+
+            # zkontroluje zda je textové pole prázdné
+
+            self.pushButton_3.setChecked(False)
+
+            return
+
+        elif self.pushButton_3.isChecked() or self.checkBox.isChecked():
+
+            cesta_program = os.getcwd()
+            cesta_temp_slozka = cesta_program + "\\temp"
+
+            ulozene_jazyky_dict = self.ulozene_jazyky()
+
+            jazyk_2 = str(self.comboBox_2.currentText())
+
+            md5hash_prelozeny = str(md5((prelozeny_text).encode()).hexdigest())
+
+            cesta_mp3_temp = str(cesta_temp_slozka + "\\" + ulozene_jazyky_dict[jazyk_2] + "_" + md5hash_prelozeny + ".mp3")
+
+            if exists(cesta_mp3_temp):
+
+                # pokud již mp3 soubor existuje
+
+                try:
+
+                    thread = threading.Thread(target=self.pustit_zvuk, args=(cesta_mp3_temp,))
+                    thread.start()
+
+                except:
+
+                    msgBox = QMessageBox()
+                    msgBox.setIcon(QMessageBox.Warning)
+                    msgBox.setWindowTitle("Problém")
+                    msgBox.setText("MP3 soubor nelze přehrát!")
+                    msgBox.setStandardButtons(QMessageBox.Ok)
+                    msgBox.exec()
+
+                    return
+
+            else:
+
+                # stáhnout
+
+                if not exists(cesta_temp_slozka):
+
+                    os.mkdir(cesta_temp_slozka)
+
+                zvuk_ke_stazeni_url = quote(prelozeny_text, safe='/:?&')
+
+                url_zvuku = "https://translate.google.com/translate_tts?ie=UTF-8&tl=" + ulozene_jazyky_dict[jazyk_2] + "&client=tw-ob&q=" + zvuk_ke_stazeni_url
+
+                try:
+
+                    response = urllib.request.urlretrieve(url_zvuku)
+
+                    cesta_mp3 = str(response[0])
+                    cesta_mp3 = cesta_mp3.replace("//", "/")
+
+                    try:
+
+                        if not exists(cesta_mp3_temp):
+
+                            move(cesta_mp3, cesta_mp3_temp)
+
+                        try:
+
+                            thread = threading.Thread(target=self.pustit_zvuk, args=(cesta_mp3_temp,))
+                            thread.start()
+
+                        except:
+
+                            msgBox = QMessageBox()
+                            msgBox.setIcon(QMessageBox.Warning)
+                            msgBox.setWindowTitle("Problém")
+                            msgBox.setText("Nelze spustit mp3 soubor!")
+                            msgBox.setStandardButtons(QMessageBox.Ok)
+                            msgBox.exec()
+
+                            return
+
+                    except:
+
+                        msgBox = QMessageBox()
+                        msgBox.setIcon(QMessageBox.Warning)
+                        msgBox.setWindowTitle("Problém")
+                        msgBox.setText("Nastala chyba při přesouvání mp3 souboru do temp složky!")
+                        msgBox.setStandardButtons(QMessageBox.Ok)
+                        msgBox.exec()
+
+                        return
+
+                except:
+
+                    msgBox = QMessageBox()
+                    msgBox.setIcon(QMessageBox.Warning)
+                    msgBox.setWindowTitle("Problém")
+                    msgBox.setText("Nefunguje připojení k internetu!")
+                    msgBox.setStandardButtons(QMessageBox.Ok)
+                    msgBox.exec()
+
+                    return
+
+        else:
+
+            try:
+
+                mixer.music.stop()
+                mixer.music.unload()
+
+            except:
+
+                return
 
 if __name__ == "__main__":
 
@@ -319,7 +553,6 @@ if __name__ == "__main__":
 
     odpocitavani_casu = 0
     POCET_SEKUND = 5
-    prave_se_prehrava = False
     md5_hash_prekladu = ""
 
     hlavni_menu1 = hlavni_menu0()
@@ -329,6 +562,7 @@ if __name__ == "__main__":
 
     hlavni_menu1.pushButton.clicked.connect(hlavni_menu1.prelozit)
     hlavni_menu1.pushButton_2.clicked.connect(hlavni_menu1.poslechnout_neprelozeny)
+    hlavni_menu1.pushButton_3.clicked.connect(hlavni_menu1.poslechnout_prelozeny)
     hlavni_menu1.pushButton_4.clicked.connect(hlavni_menu1.reset_tlacitko)
     hlavni_menu1.pushButton_5.clicked.connect(hlavni_menu1.ulozit_nastaveni)
     hlavni_menu1.pushButton_6.clicked.connect(hlavni_menu1.kopirovat_do_schranky)
