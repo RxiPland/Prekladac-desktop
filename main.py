@@ -1,12 +1,15 @@
 # Vytvořil RxiPland
 # 2022
 
+from time import sleep
 from PyQt5.QtWidgets import QMessageBox, QMainWindow, QApplication, QFileDialog, QDialog
 from hlavni_menu import Ui_MainWindow_hlavni_menu
 from os.path import exists
 import os
-import requests
-import googletrans
+from googletrans import Translator
+import threading
+from hashlib import md5
+import pyperclip
 
 
 class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
@@ -122,9 +125,28 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
             msgBox.setStandardButtons(QMessageBox.Ok)
             msgBox.exec()
 
+    def prodleva_mezi_preklady(self):
+
+        # vyčká se POCET_SEKUND po přeložení textu, aby se předešlo zablokování ip adresy
+
+        global odpocitavani_casu, POCET_SEKUND
+
+
+        for i in reversed(range(0, POCET_SEKUND)):
+
+            sleep(1)
+
+            odpocitavani_casu = i
+
+            self.pushButton.setText(f"Dostupné za {str(odpocitavani_casu)}s")
+
+        self.pushButton.setText("Přeložit")
+
     def prelozit(self):
 
         # funkce, která přeloží text
+
+        global md5_hash_prekladu
 
         try:
 
@@ -139,6 +161,8 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
             text_k_prelozeni = str(self.plainTextEdit.toPlainText())
 
+            md5_hash_predchoziho_prekladu = str(md5((self.plainTextEdit.toPlainText() + jazyk_1 + jazyk_2).encode()).hexdigest())
+
             if text_k_prelozeni == "":
                 
                 msgBox = QMessageBox()
@@ -152,11 +176,24 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
             else:
 
-                url_prekladace = f"https://translate.google.com/?sl={jazyk_1}&tl={jazyk_2}&text={text_k_prelozeni}"
+                translator = Translator(service_urls=['translate.google.com'])
+                thread = threading.Thread(target=self.prodleva_mezi_preklady)
 
                 try:
 
-                    response = requests.get(url_prekladace)
+                    if odpocitavani_casu == 0 and md5_hash_prekladu != md5_hash_predchoziho_prekladu:
+
+                        prelozeny_text = str(translator.translate(text_k_prelozeni, dest=jazyk_2, src=jazyk_1).text)
+
+                        md5_hash_prekladu = str(md5((text_k_prelozeni + jazyk_1 + jazyk_2).encode()).hexdigest())
+
+                        self.plainTextEdit_2.setPlainText(prelozeny_text)
+
+                        thread.start()
+
+                    else:
+
+                        pass
 
 
                 except:
@@ -177,12 +214,58 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
             msgBox.setStandardButtons(QMessageBox.Ok)
             msgBox.exec()
 
+    def kopirovat_do_schranky(self):
+
+        try:
+
+            prelozeny_text = str(self.plainTextEdit_2.toPlainText())
+
+            pyperclip.copy(prelozeny_text)
+
+            msgBox = QMessageBox()
+            msgBox.setIcon(QMessageBox.Question)
+            msgBox.setWindowTitle("Oznámení")
+            msgBox.setText("Překlad byl úspěšně zkopírován")
+            msgBox.setStandardButtons(QMessageBox.Ok)
+            msgBox.exec()
+
+        except:
+
+            msgBox = QMessageBox()
+            msgBox.setIcon(QMessageBox.Warning)
+            msgBox.setWindowTitle("Problém")
+            msgBox.setText("Překlad se nepodařilo zkopírovat!")
+            msgBox.setStandardButtons(QMessageBox.Ok)
+            msgBox.exec()
+
+    def vlozit_ze_schranky(self):
+
+        try:
+
+            text_ze_schranky = str(pyperclip.paste())
+
+            self.plainTextEdit.setPlainText(text_ze_schranky)
+
+        except:
+
+            msgBox = QMessageBox()
+            msgBox.setIcon(QMessageBox.Warning)
+            msgBox.setWindowTitle("Problém")
+            msgBox.setText("Nepodařilo se vložit text ze schránky!")
+            msgBox.setStandardButtons(QMessageBox.Ok)
+            msgBox.exec()
+
 
 
 if __name__ == "__main__":
 
+
     import sys
     app = QApplication(sys.argv)
+
+    odpocitavani_casu = 0
+    POCET_SEKUND = 5
+    md5_hash_prekladu = ""
 
     hlavni_menu1 = hlavni_menu0()
 
@@ -192,6 +275,8 @@ if __name__ == "__main__":
     hlavni_menu1.pushButton.clicked.connect(hlavni_menu1.prelozit)
     hlavni_menu1.pushButton_4.clicked.connect(hlavni_menu1.reset_tlacitko)
     hlavni_menu1.pushButton_5.clicked.connect(hlavni_menu1.ulozit_nastaveni)
+    hlavni_menu1.pushButton_6.clicked.connect(hlavni_menu1.kopirovat_do_schranky)
+    hlavni_menu1.pushButton_7.clicked.connect(hlavni_menu1.vlozit_ze_schranky)
 
     app.aboutToQuit.connect(hlavni_menu1.ukoncit)
     sys.exit(app.exec_())
