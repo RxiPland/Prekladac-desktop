@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QMessageBox, QMainWindow, QApplication
 from hlavni_menu import Ui_MainWindow_hlavni_menu
 from os.path import exists
 import os
-from googletrans import Translator
+from googletrans import Translator  #googletrans==4.0.0rc1
 import threading
 from hashlib import md5
 import pyperclip
