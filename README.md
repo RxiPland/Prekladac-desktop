@@ -1,7 +1,7 @@
 # Překladač
 
 - Umožňuje překládat věty bez zapnutí prohlížeče
-- Pro prevenci před zablokováním ip adresy, je nastavena prodleva mezi jednotlivýmy překlady [5s]
+- Pro prevenci před zablokováním ip adresy, je nastavena prodleva mezi každým překladem [5s]
 - Pro překlad je využíván https://translate.google.com/
 
 # Náhled
