@@ -10,6 +10,8 @@
 
 
 # Použité knihovny:
+
+- Je nutné použít specifickou verzi knihovny googletrans, jinak program nebude fungovat
 ```
 pip install PyQt5
 pip install Pyperclip
