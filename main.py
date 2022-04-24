@@ -1,6 +1,8 @@
 # Vytvořil RxiPland
 # 2022
 
+# python 3.9.9
+
 from time import sleep
 from PyQt5.QtWidgets import QMessageBox, QMainWindow, QApplication, QFileDialog, QDialog
 from hlavni_menu import Ui_MainWindow_hlavni_menu
