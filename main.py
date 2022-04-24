@@ -177,7 +177,7 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
         global md5_hash_prekladu
 
-        try:
+        if 1==1:
 
             ulozene_jazyky_dict = self.ulozene_jazyky()
 
@@ -189,6 +189,19 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
             jazyk_2 = ulozene_jazyky_dict[jazyk_2]
 
             text_k_prelozeni = str(self.plainTextEdit.toPlainText())
+
+            delka_textu = len(text_k_prelozeni)
+
+            if delka_textu > 2800:
+
+                msgBox = QMessageBox()
+                msgBox.setIcon(QMessageBox.Warning)
+                msgBox.setWindowTitle("Problém")
+                msgBox.setText("Délka textu nemůže být delší jak 2800 znaků!\n\nAktuální délka textu: " + str(delka_textu))
+                msgBox.setStandardButtons(QMessageBox.Ok)
+                msgBox.exec()
+
+                return
 
             md5_hash_predchoziho_prekladu = str(md5((self.plainTextEdit.toPlainText() + jazyk_1 + jazyk_2).encode()).hexdigest())
 
@@ -208,7 +221,7 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
                 translator = Translator(service_urls=['translate.google.com'])
                 thread = threading.Thread(target=self.prodleva_mezi_preklady)
 
-                try:
+                if 1==1:
 
                     if (odpocitavani_casu == 0 and md5_hash_prekladu != md5_hash_predchoziho_prekladu) or self.plainTextEdit_2.toPlainText() == "":
 
@@ -225,7 +238,7 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
                             self.poslechnout_prelozeny()
 
 
-                except:
+                elif 1==1:
 
                     msgBox = QMessageBox()
                     msgBox.setIcon(QMessageBox.Warning)
@@ -234,7 +247,7 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
                     msgBox.setStandardButtons(QMessageBox.Ok)
                     msgBox.exec()
 
-        except:
+        elif 1==1:
 
             msgBox = QMessageBox()
             msgBox.setIcon(QMessageBox.Warning)
