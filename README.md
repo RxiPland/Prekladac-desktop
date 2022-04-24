@@ -1,7 +1,12 @@
-# Překladač desktop
+# Překladač
 
 - Umožňuje překládat věty bez zapnutí prohlížeče
 - Pro prevenci před zablokováním ip adresy, je nastavena prodleva mezi překlady
+
+# Náhled
+
+![screen1](https://user-images.githubusercontent.com/82058894/164982534-31417f02-46b5-4e81-942c-d337bbe3f231.png)
+
 
 # Použité knihovny:
 ```
