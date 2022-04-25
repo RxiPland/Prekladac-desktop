@@ -78,6 +78,13 @@ class Ui_MainWindow_hlavni_menu(object):
         self.pushButton_7.setGeometry(QtCore.QRect(300, 22, 121, 31))
         self.pushButton_7.setObjectName("pushButton_7")
 
+        self.pushButton_8 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_8.setGeometry(QtCore.QRect(460, 240, 131, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.pushButton_8.setFont(font)
+        self.pushButton_8.setObjectName("pushButton_8")
+
 
         self.checkBox = QtWidgets.QCheckBox(self.centralwidget)
         self.checkBox.setGeometry(QtCore.QRect(450, 320, 161, 41))
@@ -154,3 +161,4 @@ class Ui_MainWindow_hlavni_menu(object):
         self.checkBox.setText(_translate("MainWindow", " Automaticky přehrát\n zvuk překladu"))
         self.pushButton_6.setText(_translate("MainWindow", "Kopírovat překlad"))
         self.pushButton_7.setText(_translate("MainWindow", "Vložit ze schránky"))
+        self.pushButton_8.setText(_translate("MainWindow", "Otočit jazyky"))

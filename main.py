@@ -605,6 +605,15 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
                 return
 
+
+    def otocit(self):
+
+        jazyk_1 = str(self.comboBox.currentText())
+        jazyk_2 = str(self.comboBox_2.currentText())
+
+        self.comboBox.setCurrentText(jazyk_2)
+        self.comboBox_2.setCurrentText(jazyk_1)
+
 if __name__ == "__main__":
 
 
@@ -627,6 +636,7 @@ if __name__ == "__main__":
     hlavni_menu1.pushButton_5.clicked.connect(hlavni_menu1.ulozit_nastaveni)
     hlavni_menu1.pushButton_6.clicked.connect(hlavni_menu1.kopirovat_do_schranky)
     hlavni_menu1.pushButton_7.clicked.connect(hlavni_menu1.vlozit_ze_schranky)
+    hlavni_menu1.pushButton_8.clicked.connect(hlavni_menu1.otocit)
 
     app.aboutToQuit.connect(hlavni_menu1.ukoncit)
     sys.exit(app.exec_())
