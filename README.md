@@ -6,8 +6,7 @@
 
 # Náhled
 
-![screen1](https://user-images.githubusercontent.com/82058894/164982534-31417f02-46b5-4e81-942c-d337bbe3f231.png)
-
+![screen1](https://user-images.githubusercontent.com/82058894/165133097-d9331006-effa-4fde-bcde-4e01d3898a7f.png)
 
 # Použité knihovny:
 
