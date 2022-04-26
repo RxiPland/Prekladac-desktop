@@ -177,7 +177,7 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
 
         global md5_hash_prekladu
 
-        if 1==1:
+        try:
 
             ulozene_jazyky_dict = self.ulozene_jazyky()
 
@@ -221,7 +221,7 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
                 translator = Translator(service_urls=['translate.google.com'])
                 thread = threading.Thread(target=self.prodleva_mezi_preklady)
 
-                if 1==1:
+                try:
 
                     if (odpocitavani_casu == 0 and md5_hash_prekladu != md5_hash_predchoziho_prekladu) or self.plainTextEdit_2.toPlainText() == "":
 
@@ -238,7 +238,7 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
                             self.poslechnout_prelozeny()
 
 
-                elif 1==1:
+                except:
 
                     msgBox = QMessageBox()
                     msgBox.setIcon(QMessageBox.Warning)
@@ -247,7 +247,7 @@ class hlavni_menu0(QMainWindow, Ui_MainWindow_hlavni_menu):
                     msgBox.setStandardButtons(QMessageBox.Ok)
                     msgBox.exec()
 
-        elif 1==1:
+        except:
 
             msgBox = QMessageBox()
             msgBox.setIcon(QMessageBox.Warning)
